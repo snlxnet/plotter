@@ -1,0 +1,53 @@
+<style>
+body {
+  margin: 0;
+}
+#pointer {
+  display: block;
+  aspect-ratio: 1 / 1;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: #0f0;
+  border-radius: 100px;
+}
+</style>
+
+<body>
+<div id="pointer"></div>
+<canvas id="canvas">
+</canvas>
+</body>
+
+<script>
+const pen = canvas.getContext("2d")
+pen.canvas.width = window.innerWidth
+pen.canvas.height = window.innerHeight
+pen.beginPath()
+
+let wasDown = false
+let wasUpFor = 0
+const processPointer = (event) => {
+  pointer.style.top = event.clientY + "px"
+  pointer.style.left = event.clientX + "px"
+  pointer.style.width = event.pressure * 100 + "px"
+
+  if (event.pressure) {
+    pen.lineTo(event.clientX, event.clientY)
+    pen.stroke()
+  } else if (!wasDown && wasUpFor > 5) {
+    pen.moveTo(event.clientX, event.clientY)
+  }
+
+  wasDown = event.pressure > 0
+  if (wasDown) {
+    wasUpFor = 0
+  } else {
+    wasUpFor++
+  }
+
+  console.log(wasUpFor)
+}
+document.body.onpointermove = processPointer
+document.body.onpointerup = processPointer
+document.body.onpointerdown = processPointer
+</script>
