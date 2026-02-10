@@ -1,0 +1,23 @@
+<canvas id="canvas" style="width: 100%; aspect-ratio: 21 / 9; background: #181825">
+</canvas>
+
+<script src="sample.js"></script>
+<script>
+const padding = 30
+const scale = 1 / 6
+
+const pen = canvas.getContext("2d")
+pen.canvas.width = canvas.width / scale
+pen.canvas.height = canvas.height / scale
+pen.lineWidth = 3
+
+strokes.forEach(stroke => {
+  pen.beginPath()
+  stroke.forEach(point => {
+    pen.strokeStyle = point.color === "black" ? "#cdd6f4" : "#f38ba8"
+    pen.lineWidth = point.color === "black" ? 3 : 6
+    pen.lineTo(point.x + padding, point.y + padding)
+  })
+  pen.stroke()
+})
+</script>
