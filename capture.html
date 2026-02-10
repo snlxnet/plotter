@@ -12,17 +12,18 @@ body {
 }
 </style>
 
-<body>
 <div id="pointer"></div>
 <canvas id="canvas">
 </canvas>
-</body>
 
 <script>
 const pen = canvas.getContext("2d")
 pen.canvas.width = window.innerWidth
 pen.canvas.height = window.innerHeight
 pen.beginPath()
+
+let strokes = [[]]
+let color = "black"
 
 let wasDown = false
 let wasUpFor = 0
@@ -34,8 +35,12 @@ const processPointer = (event) => {
   if (event.pressure) {
     pen.lineTo(event.clientX, event.clientY)
     pen.stroke()
+    strokes.at(-1).push({x: event.clientX, y: event.clientY, force: event.pressure, color})
   } else if (!wasDown && wasUpFor > 5) {
     pen.moveTo(event.clientX, event.clientY)
+    if (strokes.at(-1).length) {
+      strokes.push([])
+    }
   }
 
   wasDown = event.pressure > 0
@@ -44,10 +49,26 @@ const processPointer = (event) => {
   } else {
     wasUpFor++
   }
-
-  console.log(wasUpFor)
 }
 document.body.onpointermove = processPointer
 document.body.onpointerup = processPointer
 document.body.onpointerdown = processPointer
+
+document.addEventListener("keypress", ({key}) => {
+  if (key === "r") {
+    pen.beginPath()
+    color = "red"
+    pen.strokeStyle = color
+  }
+  // t for revert
+  if (key === "t") {
+    pen.beginPath()
+    color = black
+    pen.strokeStyle = color
+  }
+  // y for yank
+  if (key === "y") {
+    navigator.clipboard.writeText(JSON.stringify(strokes, null, 4))
+  }
+})
 </script>
