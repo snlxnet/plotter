@@ -6,8 +6,8 @@
 )
 
 // raw gcode helpers
-#let cmd(code, ..args) = text[#code #args.pos().join([ ]) E0 F1500]
-#let slow(code, ..args) = text(fill: gray)[#code #args.pos().join([ ]) E0 F200]
+#let cmd(code, fill: black, ..args) = text(fill: fill)[#code #args.pos().join([ ]) E0 F1500]
+#let slow(code, fill: gray, ..args) = text(fill: fill)[#code #args.pos().join([ ]) E0 F200]
 #let x(pos) = text(fill: red, "X" + str(pos))
 #let y(pos) = text(fill: green, "Y" + str(pos))
 #let z(pos) = text(fill: blue, "Z" + str(pos))
@@ -21,7 +21,7 @@
     (
       gcode: (
         slow("G1", z(51)),
-        cmd("G1", x(end-x), y(end-y)),
+        cmd("G1", x(end-x), y(end-y), fill: gray),
       ),
       visual: cetz.draw.line(stroke: gray, (start-x, start-y), (end-x, end-y)),
       x: end-x,
@@ -37,7 +37,7 @@
     (
       gcode: (
         slow("G1", z(50)),
-        cmd("G1", x(end-x), y(end-y)),
+        cmd("G1", x(end-x), y(end-y), fill: black),
       ),
       visual: cetz.draw.line(stroke: 1mm + black, (start-x, start-y), (end-x, end-y)),
       x: end-x,
